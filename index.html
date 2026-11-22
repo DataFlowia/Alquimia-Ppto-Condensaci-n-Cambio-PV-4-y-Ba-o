@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <!-- Metadatos básicos y configuración de vista adaptable -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a1317" />
+  <title>Presupuesto Galpón Maquinarias — Puerto Montt</title>
+
+  <!-- Carga de Google Fonts: Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { roboto: ['Roboto', 'sans-serif'] },
+          colors: {
+            black: '#0a1317',
+            white: '#eaf2f4',
+            cyanheading: '#62bccb',
+            cyansoft: 'rgba(98,188,203,0.14)',
+            zinc: {
+              50: '#f0f6f7', 100: '#e2edef', 200: '#cfdde0', 300: '#b3c6cb',
+              400: '#8ea5ab', 500: '#6b858c', 600: '#4a6169', 700: '#2b434b',
+              800: '#1f3239', 900: '#142228', 950: '#0e1a1f'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    :root {
+      --bg: #0a1317;
+      --surface: #0f1b20;
+      --surface-2: #132329;
+      --line: #1f3239;
+      --line-2: #2b434b;
+      --text: #eaf2f4;
+      --muted: #8ea5ab;
+      --cyan: #62bccb;
+      --cyan-deep: #3f8d9b;
+      --cyan-soft: rgba(98, 188, 203, 0.12);
+    }
+
+    html { scroll-padding-top: 4.5rem; }
+
+    html, body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Roboto', sans-serif;
+      overflow-x: hidden;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    h1, h2 { color: var(--cyan); letter-spacing: -0.01em; }
+    h1 { font-weight: 700 !important; }
+    h2 { font-weight: 600 !important; }
+    h3 { color: var(--text); }
+    .font-black { font-weight: 800; }
+
+    /* Etiquetas pequeñas: sentence case, sin mayúsculas forzadas */
+    .uppercase { text-transform: none !important; }
+    .tracking-widest, .tracking-wider { letter-spacing: 0.02em !important; }
+
+    /* Superficies */
+    .surface-card {
+      background-color: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      transition: border-color .2s ease;
+    }
+    .surface-card:hover { border-color: #34535c; }
+    .surface-card.flex-col { gap: 0.75rem; }
+
+    .hero { border-top: 2px solid rgba(98, 188, 203, 0.65); }
+
+    .metric-box {
+      background-color: #0c171c;
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+    }
+
+    /* Barra de participación en tarjetas resumen */
+    .share { height: 4px; border-radius: 9999px; background: var(--line); overflow: hidden; margin-top: auto; }
+    .share > span { display: block; height: 100%; background: var(--cyan); border-radius: 9999px; }
+    .share + div { margin-top: 0.6rem; }
+
+    /* Navegación */
+    a.nav-active { color: var(--cyan) !important; background-color: var(--surface-2) !important; }
+
+    /* Tablas */
+    .table-container {
+      background-color: #0c171c;
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 780px;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+    th {
+      background-color: var(--surface-2);
+      color: #b9ccd1;
+      font-weight: 600;
+      font-size: 0.78rem;
+      letter-spacing: 0.02em;
+      border-bottom: 1px solid var(--line-2);
+    }
+    td {
+      border-bottom: 1px solid #172830;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    tbody tr:hover { background-color: rgba(98, 188, 203, 0.05); }
+
+    .partida-header-row td {
+      background-color: #12262d;
+      font-weight: 700;
+      border-top: 1px solid var(--line-2);
+      border-bottom: 1px solid #223a42;
+    }
+    .partida-header-row td:first-child { box-shadow: inset 3px 0 0 var(--cyan); color: var(--cyan); }
+
+    .partida-subtotal-row td {
+      background-color: #0f1f25;
+      font-weight: 700;
+      border-bottom: 1px solid var(--line-2);
+    }
+    .detail-note-row td {
+      background-color: #0a1418;
+      color: #a3b7bc;
+      font-style: italic;
+      font-size: 0.82rem;
+    }
+    .direct-total-row td {
+      background-color: #163038;
+      font-weight: 800;
+      font-size: 0.96rem;
+      border-top: 2px solid var(--cyan-deep);
+      border-bottom: 2px solid var(--cyan-deep);
+    }
+    .final-total-row td {
+      background-color: #1b3b45;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1.04rem;
+      border-top: 2px solid var(--cyan);
+      border-bottom: 2px solid var(--cyan);
+    }
+
+    /* Carta Gantt en formato tabla de presupuesto */
+    .gantt-table { min-width: 1420px; }
+    .gantt-table .gd.hol { background-color: rgba(98, 188, 203, 0.05); }
+    .gantt-table th.gd.hol { background-color: #17303a; color: var(--cyan); }
+    .gantt-table .gd {
+      padding: 0;
+      width: 44px;
+      min-width: 44px;
+      text-align: center;
+      border-left: 1px solid #172830;
+    }
+    .gantt-table th.gd { line-height: 1.25; padding: 6px 0; }
+    .gantt-table td.gd { height: 38px; }
+    .gantt-table .gd.wk { border-left: 1px solid var(--line-2); }
+    .gantt-table .wk-head { border-left: 1px solid var(--line-2); text-align: center; }
+    .bar {
+      display: block;
+      height: 14px;
+      margin: 0 3px;
+      border-radius: 9999px;
+      background: var(--cyan);
+    }
+    .bar.alt { background: var(--cyan-deep); }
+    .bar.hold { background: transparent; border: 1.5px dashed var(--cyan); }
+    .bar.win { height: 6px; background: rgba(98, 188, 203, 0.4); }
+
+    .gantt-btn {
+      padding: 0.375rem 0.75rem;
+      border-radius: 0.375rem;
+      border: 1px solid var(--line-2);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: background-color .15s ease, border-color .15s ease;
+    }
+    .gantt-btn:hover { background: var(--surface-2); }
+    .gantt-btn:focus-visible, a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+    .gantt-btn.is-active {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      color: #06161a;
+      font-weight: 700;
+    }
+
+    @media print {
+      body { background-color: var(--bg) !important; color: var(--text) !important; }
+      .no-print { display: none !important; }
+      .table-container, .surface-card, .metric-box { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body class="bg-black text-white font-roboto antialiased selection:bg-cyanheading selection:text-black">
+
+  <!-- Barra de navegación superior -->
+  <header class="sticky top-0 z-40 bg-black/95 backdrop-blur border-b border-zinc-800 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-zinc-200">
+        <span class="w-2.5 h-2.5 rounded-full bg-cyanheading inline-block"></span>
+        <span>Ingeniería Estructural · Puerto Montt, Chile</span>
+      </div>
+      <nav aria-label="Secciones del informe" class="flex flex-wrap items-center gap-1.5 sm:gap-3 text-xs sm:text-sm">
+        <a href="#alcance-partidas" class="px-2.5 py-1.5 rounded-md text-zinc-200 hover:bg-zinc-900 transition">1. Alcance</a>
+        <a href="#resumen-partidas" class="px-2.5 py-1.5 rounded-md text-zinc-200 hover:bg-zinc-900 transition">2. Resumen</a>
+        <a href="#presupuesto-consolidado" class="px-2.5 py-1.5 rounded-md text-zinc-200 hover:bg-zinc-900 transition">3. Presupuesto</a>
+        <a href="#carta-gantt" class="px-2.5 py-1.5 rounded-md text-zinc-200 hover:bg-zinc-900 transition">4. Carta Gantt</a>
+        <a href="#conclusion-tecnica" class="px-2.5 py-1.5 rounded-md text-zinc-200 hover:bg-zinc-900 transition">5. Conclusión</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-14">
+
+    <!-- =====================================================================
+         BLOQUE 1: H1 PRINCIPAL EN CIAN Y SUBTÍTULO DE CONTEXTO SOBRE PUERTO MONTT
+         ===================================================================== -->
+    <section class="surface-card hero p-6 sm:p-10 space-y-5">
+      <p class="text-xs sm:text-sm font-bold uppercase tracking-widest text-zinc-400">
+        Estudio Técnico y Presupuesto de Obra · Región de Los Lagos, Chile
+      </p>
+      <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+        Presupuesto Galpón Maquinarias
+      </h1>
+      <p class="text-base sm:text-lg text-white leading-relaxed max-w-4xl">
+        Informe técnico y económico para galpón de maquinarias y herramientas ubicado en <strong class="font-bold text-white">Puerto Montt</strong>, orientado a resolver la condensación interna y filtraciones de cubierta mediante <strong class="font-bold text-white">Tratamiento Condensación</strong>, <strong class="font-bold text-white">Cambio de Cubiertas</strong> y <strong class="font-bold text-white">Ampliación Baño</strong>, integrando el soporte de equipos de elevación en altura.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-4 border-t border-zinc-800 text-xs sm:text-sm">
+        <div class="metric-box p-3.5">
+          <span class="text-zinc-400 block">Emplazamiento y Clima</span>
+          <span class="text-white font-bold">Puerto Montt · Alta Humedad</span>
+        </div>
+        <div class="metric-box p-3.5">
+          <span class="text-zinc-400 block">Superficies de Cubierta</span>
+          <span class="text-white font-bold">450 m² Trat. · 270 m² Cambio PV4</span>
+        </div>
+        <div class="metric-box p-3.5">
+          <span class="text-zinc-400 block">Costo Directo Neto</span>
+          <span class="text-white font-bold">$22.403.425 CLP</span>
+        </div>
+        <div class="metric-box p-3.5">
+          <span class="text-zinc-400 block">Oferta Total con IVA (19%)</span>
+          <span class="text-white font-bold">$35.296.316 CLP</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         BLOQUE 2: SECCIÓN / H2 - ALCANCE DE PARTIDAS
+         ===================================================================== -->
+    <section id="alcance-partidas" class="space-y-8">
+      <div class="border-b border-zinc-800 pb-3">
+        <span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Sección 1</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold mt-1">
+          1. Alcance de Partidas: Tratamiento Condensación, Cambio de Cubiertas y Ampliación Baño
+        </h2>
+        <p class="text-zinc-300 mt-1.5 text-sm sm:text-base">
+          Evaluación técnica de las cuatro partidas que componen el estudio de obra en el galpón de Puerto Montt.
+        </p>
+      </div>
+
+      <!-- Partida 1 -->
+      <article class="surface-card p-5 sm:p-7 space-y-4">
+        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3 border-b border-zinc-800 pb-4">
+          <div class="space-y-1.5 max-w-4xl">
+            <h3 class="text-xl sm:text-2xl font-bold">
+              Partida 1 — Tratamiento Condensación ($10.730.000)
+            </h3>
+            <p class="text-sm text-zinc-200 leading-relaxed">
+              Diseñada para eliminar el goteo por condensación sobre los 450 m² de cubierta PV-4 electropintada, saneando fijaciones corroídas sin o-ring y aplicando una barrera térmico-anticondensación o celulosa proyectada sobre superficie limpia, desengrasada e imprimada. Incluye la protección integral de pisos, maquinarias y luminarias durante la faena.
+            </p>
+          </div>
+          <div class="text-left md:text-right shrink-0">
+            <span class="text-xs uppercase tracking-wider text-zinc-400 block">Monto Partida 1</span>
+            <span class="text-xl sm:text-2xl font-black text-white">$10.730.000</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs text-zinc-200">
+          <div class="bg-black border border-zinc-800 rounded-lg p-3">
+            <strong class="text-white block">1.1 Limpieza (450 m²)</strong>
+            <span>Retiro de polvo, telarañas y óxido superficial · $1.080.000</span>
+          </div>
+          <div class="bg-black border border-zinc-800 rounded-lg p-3">
+            <strong class="text-white block">1.2 Tornillos + Tapagotera (1.350 un)</strong>
+            <span>Cambio a hexagonal punta broca con sello · $1.485.000</span>
+          </div>
+          <div class="bg-black border border-zinc-800 rounded-lg p-3">
+            <strong class="text-white block">1.3 Lavado y 1.4 Puente (450 m² c/u)</strong>
+            <span>Detergente e imprimante · $1.350.000 y $1.395.000</span>
+          </div>
+          <div class="bg-black border border-zinc-800 rounded-lg p-3">
+            <strong class="text-white block">1.5 Proyección (450 m²) + 1.6 / 1.7</strong>
+            <span>Celulosa/pintura $4.770.000 · Pisos $450.000 · Lámparas $200.000</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Partida 2 -->
+      <article class="surface-card p-5 sm:p-7 space-y-4">
+        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3 border-b border-zinc-800 pb-4">
+          <div class="space-y-1.5 max-w-4xl">
+            <h3 class="text-xl sm:text-2xl font-bold">
+              Partida 2 — Cambio de Cubiertas ($8.332.625)
+            </h3>
+            <p class="text-sm text-zinc-200 leading-relaxed">
+              Contempla el suministro e instalación de 270 m² de cubierta Zincalum prepintado PV4, fijación con tornillos hexagonales punta broca con o-ring de poliuretano (lote global y 891 unidades) más sellado tapagotera, recambio de 12 ml de perfiles costanera con pintura, hojalatería en encuentro muro-losa L 10x20 cm (33 ml suministrada/instalada y 270 ml instalada) y repaso anticorrosivo de estructura existente.
+            </p>
+          </div>
+          <div class="text-left md:text-right shrink-0">
+            <span class="text-xs uppercase tracking-wider text-zinc-400 block">Monto Partida 2</span>
+            <span class="text-xl sm:text-2xl font-black text-white">$8.332.625</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 text-xs text-zinc-200">
+          <div class="bg-black border border-zinc-800 rounded-lg p-3">
+            <strong class="text-white block">2.1 y 2.4 Cubierta Zincalum PV4 (270 m²)</strong>
+            <span>Suministro $2.608.200 + Instalación $1.782.000</span>
+          </div>
+          <div class="bg-black border border-zinc-800 rounded-lg p-3">
+            <strong class="text-white block">2.2, 2.3 y 2.7 Fijaciones y Sellos</strong>
+            <span>Tornillos gl $145.000 · Tapagotera $95.000 · 891 un $757.350</span>
+          </div>
+          <div class="bg-black border border-zinc-800 rounded-lg p-3">
+            <strong class="text-white block">2.5, 2.6, 2.8 y 2.9 Costaneras, Hojalatería y Pintura</strong>
+            <span>Costaneras $600.000 · Hoj. 33 ml $570.075 · Pintura $425.000 · Hoj. 270 ml $1.350.000</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Partida 3 -->
+      <article class="surface-card p-5 sm:p-7 space-y-4">
+        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3 border-b border-zinc-800 pb-4">
+          <div class="space-y-1.5 max-w-4xl">
+            <h3 class="text-xl sm:text-2xl font-bold">
+              Partida 3 — Ampliación Baño / Baños ($1.800.800)
+            </h3>
+            <p class="text-sm text-zinc-200 leading-relaxed">
+              Comprende la demolición de tabiques existentes en volcometal, ejecución de 24 m² de tabiques Metalcom más volcanita con aislante térmico/acústico, habilitación de 15 m² de cielo falso, pintura de terminación en 39 m² (base más dos manos, incluyendo huincha join, lijado y aplicación de pasta muro) y proyecto eléctrico con 4 centros de iluminación LED y 4 centros de fuerza Marisio.
+            </p>
+          </div>
+          <div class="text-left md:text-right shrink-0">
+            <span class="text-xs uppercase tracking-wider text-zinc-400 block">Monto Partida 3</span>
+            <span class="text-xl sm:text-2xl font-black text-white">$1.800.800</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 text-xs text-zinc-200">
+          <div class="bg-black border border-zinc-800 rounded-lg p-3">
+            <strong class="text-white block">3.1 Demolición y 3.2 Tabiques (24 m²)</strong>
+            <span>Demolición volcometal $280.000 · Metalcom + volcanita + aislante $636.000</span>
+          </div>
+          <div class="bg-black border border-zinc-800 rounded-lg p-3">
+            <strong class="text-white block">3.3 Cielo Falso (15 m²) y 3.4 Pintura (39 m²)</strong>
+            <span>Cielo falso $270.000 · Pintura c/juntas, lijado y pasta muro $202.800</span>
+          </div>
+          <div class="bg-black border border-zinc-800 rounded-lg p-3">
+            <strong class="text-white block">3.5 Proyecto Eléctrico (4 LED + 4 Marisio)</strong>
+            <span>Centros iluminación LED $220.000 · Centros fuerza Marisio $192.000</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Partida 4 -->
+      <article class="surface-card p-5 sm:p-7 space-y-4">
+        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3 border-b border-zinc-800 pb-4">
+          <div class="space-y-1.5 max-w-4xl">
+            <h3 class="text-xl sm:text-2xl font-bold">
+              Partida 4 — Arriendo Equipos de Elevación - 2 Alza Hombres por 10 días hábiles ($1.540.000)
+            </h3>
+            <p class="text-sm text-zinc-200 leading-relaxed">
+              Asegura el acceso seguro y continuo a cubierta, cerchas, encuentros muro-losa y luminarias en Puerto Montt durante 10 días hábiles (dos semanas de lunes a viernes, 8 horas diarias), mediante plataforma tijera (10 días), brazo articulado de altura (10 días) y flete ida/vuelta con recarga de combustible.
+            </p>
+          </div>
+          <div class="text-left md:text-right shrink-0">
+            <span class="text-xs uppercase tracking-wider text-zinc-400 block">Monto Partida 4</span>
+            <span class="text-xl sm:text-2xl font-black text-white">$1.540.000</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs text-zinc-200">
+          <div class="bg-black border border-zinc-800 rounded-lg p-3">
+            <strong class="text-white block">4.1 Plataforma Tijera (10 días)</strong>
+            <span>$60.000/día · Total $600.000</span>
+          </div>
+          <div class="bg-black border border-zinc-800 rounded-lg p-3">
+            <strong class="text-white block">4.2 Brazo Articulado Altura (10 días)</strong>
+            <span>$75.000/día · Total $750.000</span>
+          </div>
+          <div class="bg-black border border-zinc-800 rounded-lg p-3">
+            <strong class="text-white block">4.3 Flete y Combustible (1 gl)</strong>
+            <span>Traslado en Puerto Montt y combustible · Total $190.000</span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- =====================================================================
+         BLOQUE 3: SECCIÓN / H2 - RESUMEN DE LAS 4 PARTIDAS
+         ===================================================================== -->
+    <section id="resumen-partidas" class="space-y-6">
+      <div class="border-b border-zinc-800 pb-3">
+        <span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Sección 2</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold mt-1">
+          2. Resumen de las 4 Partidas
+        </h2>
+        <p class="text-zinc-300 mt-1.5 text-sm sm:text-base">
+          Participación relativa de cada partida sobre el Costo Directo Total consolidado de <strong class="font-bold text-white">$22.403.425</strong>.
+        </p>
+      </div>
+
+      <!-- Tarjetas Resumen de las 4 Partidas -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div class="surface-card p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-zinc-300 mb-2">
+              <span>Partida 1</span>
+              <span class="px-2 py-0.5 rounded bg-cyansoft text-cyanheading font-semibold">47,9%</span>
+            </div>
+            <h3 class="text-base font-bold mb-1">Tratamiento Condensación</h3>
+            <p class="text-2xl font-black text-white mb-2">$10.730.000</p>
+            <p class="text-xs text-zinc-300 leading-relaxed">
+              450 m² cubierta PV4 · 1.350 tornillos con sello tapagotera, limpieza, puente adherencia y proyección.
+            </p>
+          </div>
+          <div class="share" aria-hidden="true"><span style="width:47.9%"></span></div>
+          <div class="mt-4 pt-2.5 border-t border-zinc-800 text-xs text-zinc-400 flex justify-between">
+            <span>Ítems 1.1 a 1.7</span>
+            <span class="text-zinc-200 font-semibold">47,9% del CD</span>
+          </div>
+        </div>
+
+        <div class="surface-card p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-zinc-300 mb-2">
+              <span>Partida 2</span>
+              <span class="px-2 py-0.5 rounded bg-cyansoft text-cyanheading font-semibold">37,2%</span>
+            </div>
+            <h3 class="text-base font-bold mb-1">Cambio de Cubiertas</h3>
+            <p class="text-2xl font-black text-white mb-2">$8.332.625</p>
+            <p class="text-xs text-zinc-300 leading-relaxed">
+              270 m² Zincalum PV4 · tornillería con o-ring poliuretano, 12 ml costaneras, hojalatería y pintura.
+            </p>
+          </div>
+          <div class="share" aria-hidden="true"><span style="width:37.2%"></span></div>
+          <div class="mt-4 pt-2.5 border-t border-zinc-800 text-xs text-zinc-400 flex justify-between">
+            <span>Ítems 2.1 a 2.9</span>
+            <span class="text-zinc-200 font-semibold">37,2% del CD</span>
+          </div>
+        </div>
+
+        <div class="surface-card p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-zinc-300 mb-2">
+              <span>Partida 3</span>
+              <span class="px-2 py-0.5 rounded bg-cyansoft text-cyanheading font-semibold">8,0%</span>
+            </div>
+            <h3 class="text-base font-bold mb-1">Ampliación Baño / Baños</h3>
+            <p class="text-2xl font-black text-white mb-2">$1.800.800</p>
+            <p class="text-xs text-zinc-300 leading-relaxed">
+              Demolición volcometal, 24 m² Metalcom + volcanita con aislante, 15 m² cielo, 39 m² pintura y eléctrico.
+            </p>
+          </div>
+          <div class="share" aria-hidden="true"><span style="width:8.0%"></span></div>
+          <div class="mt-4 pt-2.5 border-t border-zinc-800 text-xs text-zinc-400 flex justify-between">
+            <span>Ítems 3.1 a 3.5.2</span>
+            <span class="text-zinc-200 font-semibold">8,0% del CD</span>
+          </div>
+        </div>
+
+        <div class="surface-card p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-zinc-300 mb-2">
+              <span>Partida 4</span>
+              <span class="px-2 py-0.5 rounded bg-cyansoft text-cyanheading font-semibold">6,9%</span>
+            </div>
+            <h3 class="text-base font-bold mb-1">Arriendo Alza Hombres</h3>
+            <p class="text-2xl font-black text-white mb-2">$1.540.000</p>
+            <p class="text-xs text-zinc-300 leading-relaxed">
+              2 alza hombres (tijera y brazo articulado) por 10 días hábiles en Puerto Montt, más flete y combustible.
+            </p>
+          </div>
+          <div class="share" aria-hidden="true"><span style="width:6.9%"></span></div>
+          <div class="mt-4 pt-2.5 border-t border-zinc-800 text-xs text-zinc-400 flex justify-between">
+            <span>Ítems 4.1 a 4.3</span>
+            <span class="text-zinc-200 font-semibold">6,9% del CD</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de Resumen de las 4 Partidas -->
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th class="py-3 px-4 text-left">Partida</th>
+              <th class="py-3 px-4 text-left">Denominación</th>
+              <th class="py-3 px-4 text-left">Alcance Sintético</th>
+              <th class="py-3 px-4 text-right">Monto Neto ($)</th>
+              <th class="py-3 px-4 text-right">Participación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="py-3 px-4 font-bold">Partida 1</td>
+              <td class="py-3 px-4 font-semibold">Tratamiento Condensación</td>
+              <td class="py-3 px-4 text-zinc-200">450 m² PV4 · 1.350 tornillos + tapagotera · limpieza, puente y proyección</td>
+              <td class="py-3 px-4 text-right font-bold">$10.730.000</td>
+              <td class="py-3 px-4 text-right font-bold">47,9%</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-bold">Partida 2</td>
+              <td class="py-3 px-4 font-semibold">Cambio de Cubiertas</td>
+              <td class="py-3 px-4 text-zinc-200">270 m² Zincalum PV4 · o-ring poliuretano · 12 ml costaneras · hojalatería · pintura</td>
+              <td class="py-3 px-4 text-right font-bold">$8.332.625</td>
+              <td class="py-3 px-4 text-right font-bold">37,2%</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-bold">Partida 3</td>
+              <td class="py-3 px-4 font-semibold">Ampliación Baño / Baños</td>
+              <td class="py-3 px-4 text-zinc-200">Demolición volcometal · 24 m² Metalcom + aislante · 15 m² cielo · 39 m² pintura · eléctrico</td>
+              <td class="py-3 px-4 text-right font-bold">$1.800.800</td>
+              <td class="py-3 px-4 text-right font-bold">8,0%</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-bold">Partida 4</td>
+              <td class="py-3 px-4 font-semibold">Arriendo Equipos de Elevación (2 Alza Hombres - 10 días)</td>
+              <td class="py-3 px-4 text-zinc-200">Plataforma tijera + brazo articulado por 10 días hábiles + flete y combustible</td>
+              <td class="py-3 px-4 text-right font-bold">$1.540.000</td>
+              <td class="py-3 px-4 text-right font-bold">6,9%</td>
+            </tr>
+            <tr class="direct-total-row">
+              <td class="py-3.5 px-4" colspan="3">COSTO DIRECTO TOTAL CONSOLIDADO (PARTIDAS 1 A 4)</td>
+              <td class="py-3.5 px-4 text-right">$22.403.425</td>
+              <td class="py-3.5 px-4 text-right">100,0%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         BLOQUE 4: SECCIÓN / H2 - PRESUPUESTO CONSOLIDADO
+         ===================================================================== -->
+    <section id="presupuesto-consolidado" class="space-y-6">
+      <div class="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Sección 3</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold mt-1">
+            3. Presupuesto Consolidado
+          </h2>
+          <p class="text-zinc-300 mt-1.5 text-sm sm:text-base">
+            Desglose completo de ítems de las 4 partidas y cierre económico de la oferta (Montos en CLP).
+          </p>
+        </div>
+        <span class="text-xs font-semibold text-zinc-300">Valores en Pesos Chilenos (CLP)</span>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th class="py-3 px-3.5 text-left">Ítem</th>
+              <th class="py-3 px-3.5 text-left">Actividad</th>
+              <th class="py-3 px-3.5 text-center">Unid.</th>
+              <th class="py-3 px-3.5 text-right">Cant.</th>
+              <th class="py-3 px-3.5 text-right">P. Unit. ($)</th>
+              <th class="py-3 px-3.5 text-right">P. Total ($)</th>
+              <th class="py-3 px-3.5 text-right">Incidencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- PARTIDA 1 -->
+            <tr class="partida-header-row">
+              <td class="py-2.5 px-3.5">1</td>
+              <td class="py-2.5 px-3.5" colspan="4">Partida 1 — Tratamiento Cubierta por Condensación</td>
+              <td class="py-2.5 px-3.5 text-right">$10.730.000</td>
+              <td class="py-2.5 px-3.5 text-right">47,9%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">1.1</td>
+              <td class="py-2 px-3.5">Tratamiento de limpieza</td>
+              <td class="py-2 px-3.5 text-center">m2</td>
+              <td class="py-2 px-3.5 text-right">450</td>
+              <td class="py-2 px-3.5 text-right">$2.400</td>
+              <td class="py-2 px-3.5 text-right">$1.080.000</td>
+              <td class="py-2 px-3.5 text-right">4,8%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">1.2</td>
+              <td class="py-2 px-3.5">Cambio de T. Hexagonales punta broca con oring poliuretano + Sello con tapagoteras</td>
+              <td class="py-2 px-3.5 text-center">un</td>
+              <td class="py-2 px-3.5 text-right">1.350</td>
+              <td class="py-2 px-3.5 text-right">$1.100</td>
+              <td class="py-2 px-3.5 text-right">$1.485.000</td>
+              <td class="py-2 px-3.5 text-right">6,6%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">1.3</td>
+              <td class="py-2 px-3.5">Lavado de cielo con detergente</td>
+              <td class="py-2 px-3.5 text-center">m2</td>
+              <td class="py-2 px-3.5 text-right">450</td>
+              <td class="py-2 px-3.5 text-right">$3.000</td>
+              <td class="py-2 px-3.5 text-right">$1.350.000</td>
+              <td class="py-2 px-3.5 text-right">6,0%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">1.4</td>
+              <td class="py-2 px-3.5">Puente de adherencia / Imprimante (si aplica)</td>
+              <td class="py-2 px-3.5 text-center">m2</td>
+              <td class="py-2 px-3.5 text-right">450</td>
+              <td class="py-2 px-3.5 text-right">$3.100</td>
+              <td class="py-2 px-3.5 text-right">$1.395.000</td>
+              <td class="py-2 px-3.5 text-right">6,2%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">1.5</td>
+              <td class="py-2 px-3.5">Aplicación pintura o celulosa proyectada</td>
+              <td class="py-2 px-3.5 text-center">m2</td>
+              <td class="py-2 px-3.5 text-right">450</td>
+              <td class="py-2 px-3.5 text-right">$10.600</td>
+              <td class="py-2 px-3.5 text-right">$4.770.000</td>
+              <td class="py-2 px-3.5 text-right">21,3%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">1.6</td>
+              <td class="py-2 px-3.5">Protección nylon pisos</td>
+              <td class="py-2 px-3.5 text-center">m2</td>
+              <td class="py-2 px-3.5 text-right">450</td>
+              <td class="py-2 px-3.5 text-right">$1.000</td>
+              <td class="py-2 px-3.5 text-right">$450.000</td>
+              <td class="py-2 px-3.5 text-right">2,0%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">1.7</td>
+              <td class="py-2 px-3.5">Protección lámparas</td>
+              <td class="py-2 px-3.5 text-center">gl</td>
+              <td class="py-2 px-3.5 text-right">1</td>
+              <td class="py-2 px-3.5 text-right">$200.000</td>
+              <td class="py-2 px-3.5 text-right">$200.000</td>
+              <td class="py-2 px-3.5 text-right">0,9%</td>
+            </tr>
+            <tr class="partida-subtotal-row">
+              <td class="py-2.5 px-3.5" colspan="5">Suma Partida 1 — Tratamiento Condensación</td>
+              <td class="py-2.5 px-3.5 text-right">$10.730.000</td>
+              <td class="py-2.5 px-3.5 text-right">47,9%</td>
+            </tr>
+
+            <!-- PARTIDA 2 -->
+            <tr class="partida-header-row">
+              <td class="py-2.5 px-3.5">2</td>
+              <td class="py-2.5 px-3.5" colspan="4">Partida 2 — Cambio de Cubiertas</td>
+              <td class="py-2.5 px-3.5 text-right">$8.332.625</td>
+              <td class="py-2.5 px-3.5 text-right">37,2%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">2.1</td>
+              <td class="py-2 px-3.5">Suministro Cubierta Zincalum Prepintado PV4</td>
+              <td class="py-2 px-3.5 text-center">m2</td>
+              <td class="py-2 px-3.5 text-right">270</td>
+              <td class="py-2 px-3.5 text-right">$9.660</td>
+              <td class="py-2 px-3.5 text-right">$2.608.200</td>
+              <td class="py-2 px-3.5 text-right">11,6%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">2.2</td>
+              <td class="py-2 px-3.5">Exagonal punta broca, O'Ring poliuretano</td>
+              <td class="py-2 px-3.5 text-center">gl</td>
+              <td class="py-2 px-3.5 text-right">1</td>
+              <td class="py-2 px-3.5 text-right">$145.000</td>
+              <td class="py-2 px-3.5 text-right">$145.000</td>
+              <td class="py-2 px-3.5 text-right">0,6%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">2.3</td>
+              <td class="py-2 px-3.5">Tapagotera de sello tornillo exagonal</td>
+              <td class="py-2 px-3.5 text-center">gl</td>
+              <td class="py-2 px-3.5 text-right">1</td>
+              <td class="py-2 px-3.5 text-right">$95.000</td>
+              <td class="py-2 px-3.5 text-right">$95.000</td>
+              <td class="py-2 px-3.5 text-right">0,4%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">2.4</td>
+              <td class="py-2 px-3.5">Instal. Cubierta Zincalum Prepintado PV4</td>
+              <td class="py-2 px-3.5 text-center">m2</td>
+              <td class="py-2 px-3.5 text-right">270</td>
+              <td class="py-2 px-3.5 text-right">$6.600</td>
+              <td class="py-2 px-3.5 text-right">$1.782.000</td>
+              <td class="py-2 px-3.5 text-right">8,0%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">2.5</td>
+              <td class="py-2 px-3.5">Cambio perfiles costaneras, pintura</td>
+              <td class="py-2 px-3.5 text-center">ml</td>
+              <td class="py-2 px-3.5 text-right">12</td>
+              <td class="py-2 px-3.5 text-right">$50.000</td>
+              <td class="py-2 px-3.5 text-right">$600.000</td>
+              <td class="py-2 px-3.5 text-right">2,7%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">2.6</td>
+              <td class="py-2 px-3.5">Suministro e instal Hojalatería (forros, angulos encuentro muro losa) L 10x20 cm</td>
+              <td class="py-2 px-3.5 text-center">ml</td>
+              <td class="py-2 px-3.5 text-right">33</td>
+              <td class="py-2 px-3.5 text-right">$17.275</td>
+              <td class="py-2 px-3.5 text-right">$570.075</td>
+              <td class="py-2 px-3.5 text-right">2,5%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">2.7</td>
+              <td class="py-2 px-3.5">T. Exagonales punta broca con oring poliuretano</td>
+              <td class="py-2 px-3.5 text-center">un</td>
+              <td class="py-2 px-3.5 text-right">891</td>
+              <td class="py-2 px-3.5 text-right">$850</td>
+              <td class="py-2 px-3.5 text-right">$757.350</td>
+              <td class="py-2 px-3.5 text-right">3,4%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">2.8</td>
+              <td class="py-2 px-3.5">Repazar pintura estructura existente. (Tratamiento corrosión + Pintura)</td>
+              <td class="py-2 px-3.5 text-center">gl</td>
+              <td class="py-2 px-3.5 text-right">1</td>
+              <td class="py-2 px-3.5 text-right">$425.000</td>
+              <td class="py-2 px-3.5 text-right">$425.000</td>
+              <td class="py-2 px-3.5 text-right">1,9%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">2.9</td>
+              <td class="py-2 px-3.5">Instalación hojalatería (forros, angulos encuentro muro losa) L 10x20 cm</td>
+              <td class="py-2 px-3.5 text-center">ml</td>
+              <td class="py-2 px-3.5 text-right">270</td>
+              <td class="py-2 px-3.5 text-right">$5.000</td>
+              <td class="py-2 px-3.5 text-right">$1.350.000</td>
+              <td class="py-2 px-3.5 text-right">6,0%</td>
+            </tr>
+            <tr class="partida-subtotal-row">
+              <td class="py-2.5 px-3.5" colspan="5">Suma Partida 2 — Cambio de Cubiertas</td>
+              <td class="py-2.5 px-3.5 text-right">$8.332.625</td>
+              <td class="py-2.5 px-3.5 text-right">37,2%</td>
+            </tr>
+
+            <!-- PARTIDA 3 -->
+            <tr class="partida-header-row">
+              <td class="py-2.5 px-3.5">3</td>
+              <td class="py-2.5 px-3.5" colspan="4">Partida 3 — Ampliación Baño / Baños</td>
+              <td class="py-2.5 px-3.5 text-right">$1.800.800</td>
+              <td class="py-2.5 px-3.5 text-right">8,0%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">3.1</td>
+              <td class="py-2 px-3.5">Demoliciones Tabiques existentes en volcometal</td>
+              <td class="py-2 px-3.5 text-center">gl</td>
+              <td class="py-2 px-3.5 text-right">1</td>
+              <td class="py-2 px-3.5 text-right">$280.000</td>
+              <td class="py-2 px-3.5 text-right">$280.000</td>
+              <td class="py-2 px-3.5 text-right">1,2%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">3.2</td>
+              <td class="py-2 px-3.5">Tabiques metalcom + Volcanita (Inc. Aislante)</td>
+              <td class="py-2 px-3.5 text-center">m2</td>
+              <td class="py-2 px-3.5 text-right">24</td>
+              <td class="py-2 px-3.5 text-right">$26.500</td>
+              <td class="py-2 px-3.5 text-right">$636.000</td>
+              <td class="py-2 px-3.5 text-right">2,8%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">3.3</td>
+              <td class="py-2 px-3.5">Cielo Falso</td>
+              <td class="py-2 px-3.5 text-center">m2</td>
+              <td class="py-2 px-3.5 text-right">15</td>
+              <td class="py-2 px-3.5 text-right">$18.000</td>
+              <td class="py-2 px-3.5 text-right">$270.000</td>
+              <td class="py-2 px-3.5 text-right">1,2%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">3.4</td>
+              <td class="py-2 px-3.5">Pintura de terminación (base + 2 manos de terminación)(1cara)</td>
+              <td class="py-2 px-3.5 text-center">m2</td>
+              <td class="py-2 px-3.5 text-right">39</td>
+              <td class="py-2 px-3.5 text-right">$5.200</td>
+              <td class="py-2 px-3.5 text-right">$202.800</td>
+              <td class="py-2 px-3.5 text-right">0,9%</td>
+            </tr>
+            <tr class="detail-note-row">
+              <td class="py-1.5 px-3.5"></td>
+              <td class="py-1.5 px-3.5" colspan="6">- Huincha join (unión juntas)</td>
+            </tr>
+            <tr class="detail-note-row">
+              <td class="py-1.5 px-3.5"></td>
+              <td class="py-1.5 px-3.5" colspan="6">- lijado</td>
+            </tr>
+            <tr class="detail-note-row">
+              <td class="py-1.5 px-3.5"></td>
+              <td class="py-1.5 px-3.5" colspan="6">- Aplicación pasta muro</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5 font-semibold">3.5</td>
+              <td class="py-2 px-3.5 font-semibold" colspan="6">Proyecto eléctrico</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">3.5.1</td>
+              <td class="py-2 px-3.5">Centros de iluminación lamparas led</td>
+              <td class="py-2 px-3.5 text-center">un</td>
+              <td class="py-2 px-3.5 text-right">4</td>
+              <td class="py-2 px-3.5 text-right">$55.000</td>
+              <td class="py-2 px-3.5 text-right">$220.000</td>
+              <td class="py-2 px-3.5 text-right">1,0%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">3.5.2</td>
+              <td class="py-2 px-3.5">Centros de Fuerza (marisio)</td>
+              <td class="py-2 px-3.5 text-center">un</td>
+              <td class="py-2 px-3.5 text-right">4</td>
+              <td class="py-2 px-3.5 text-right">$48.000</td>
+              <td class="py-2 px-3.5 text-right">$192.000</td>
+              <td class="py-2 px-3.5 text-right">0,9%</td>
+            </tr>
+            <tr class="partida-subtotal-row">
+              <td class="py-2.5 px-3.5" colspan="5">Suma Partida 3 — Ampliación Baño / Baños</td>
+              <td class="py-2.5 px-3.5 text-right">$1.800.800</td>
+              <td class="py-2.5 px-3.5 text-right">8,0%</td>
+            </tr>
+
+            <!-- PARTIDA 4 -->
+            <tr class="partida-header-row">
+              <td class="py-2.5 px-3.5">4</td>
+              <td class="py-2.5 px-3.5" colspan="4">Partida 4 — Arriendo Equipos de Elevación (2 Alza Hombres - 10 días hábiles)</td>
+              <td class="py-2.5 px-3.5 text-right">$1.540.000</td>
+              <td class="py-2.5 px-3.5 text-right">6,9%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">4.1</td>
+              <td class="py-2 px-3.5">Arriendo Plataforma Tijera (Alza hombre 1 - 10 días hábiles)</td>
+              <td class="py-2 px-3.5 text-center">dia</td>
+              <td class="py-2 px-3.5 text-right">10</td>
+              <td class="py-2 px-3.5 text-right">$60.000</td>
+              <td class="py-2 px-3.5 text-right">$600.000</td>
+              <td class="py-2 px-3.5 text-right">2,7%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">4.2</td>
+              <td class="py-2 px-3.5">Arriendo Brazo Articulado Altura (Alza hombre 2 - 10 días hábiles)</td>
+              <td class="py-2 px-3.5 text-center">dia</td>
+              <td class="py-2 px-3.5 text-right">10</td>
+              <td class="py-2 px-3.5 text-right">$75.000</td>
+              <td class="py-2 px-3.5 text-right">$750.000</td>
+              <td class="py-2 px-3.5 text-right">3,3%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3.5">4.3</td>
+              <td class="py-2 px-3.5">Flete ida/vuelta alza hombres en Puerto Montt y recarga combustible</td>
+              <td class="py-2 px-3.5 text-center">gl</td>
+              <td class="py-2 px-3.5 text-right">1</td>
+              <td class="py-2 px-3.5 text-right">$190.000</td>
+              <td class="py-2 px-3.5 text-right">$190.000</td>
+              <td class="py-2 px-3.5 text-right">0,8%</td>
+            </tr>
+            <tr class="partida-subtotal-row">
+              <td class="py-2.5 px-3.5" colspan="5">Suma Partida 4 — Arriendo Equipos de Elevación (2 Alza Hombres - 10 días hábiles)</td>
+              <td class="py-2.5 px-3.5 text-right">$1.540.000</td>
+              <td class="py-2.5 px-3.5 text-right">6,9%</td>
+            </tr>
+
+            <!-- COSTO DIRECTO TOTAL -->
+            <tr class="direct-total-row">
+              <td class="py-3.5 px-3.5" colspan="5">COSTO DIRECTO TOTAL (PARTIDAS 1 + 2 + 3 + 4 NETO)</td>
+              <td class="py-3.5 px-3.5 text-right">$22.403.425</td>
+              <td class="py-3.5 px-3.5 text-right">100,0%</td>
+            </tr>
+
+            <!-- CIERRE ECONÓMICO -->
+            <tr>
+              <td class="py-2.5 px-3.5" colspan="4">Gastos Generales</td>
+              <td class="py-2.5 px-3.5 text-right font-semibold">22,4%</td>
+              <td class="py-2.5 px-3.5 text-right font-semibold">$5.017.003</td>
+              <td class="py-2.5 px-3.5 text-right">—</td>
+            </tr>
+            <tr>
+              <td class="py-2.5 px-3.5" colspan="4">Utilidades</td>
+              <td class="py-2.5 px-3.5 text-right font-semibold">10,0%</td>
+              <td class="py-2.5 px-3.5 text-right font-semibold">$2.240.342</td>
+              <td class="py-2.5 px-3.5 text-right">—</td>
+            </tr>
+            <tr class="partida-subtotal-row">
+              <td class="py-2.5 px-3.5" colspan="5">SUBTOTAL OFERTA NETA</td>
+              <td class="py-2.5 px-3.5 text-right">$29.660.770</td>
+              <td class="py-2.5 px-3.5 text-right">—</td>
+            </tr>
+            <tr>
+              <td class="py-2.5 px-3.5" colspan="4">IVA 19%</td>
+              <td class="py-2.5 px-3.5 text-right font-semibold">19,0%</td>
+              <td class="py-2.5 px-3.5 text-right font-semibold">$5.635.546</td>
+              <td class="py-2.5 px-3.5 text-right">—</td>
+            </tr>
+            <tr class="final-total-row">
+              <td class="py-4 px-3.5" colspan="5">TOTAL OFERTA COMERCIAL CON IVA</td>
+              <td class="py-4 px-3.5 text-right">$35.296.316</td>
+              <td class="py-4 px-3.5 text-right">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         BLOQUE 5: SECCIÓN / H2 - CARTA GANTT
+         ===================================================================== -->
+    <section id="carta-gantt" class="space-y-6">
+      <div class="border-b border-zinc-800 pb-3">
+        <span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Sección 4</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold mt-1">
+          4. Carta Gantt
+        </h2>
+        <p class="text-zinc-300 mt-1.5 text-sm sm:text-base">
+          Jornada de 8 horas, lunes a viernes (5 días hábiles por semana). El Día 1 es el inicio de la obra, sin fechas reales. Se incluye 1 semana de holgura (Días 11 a 15) como reserva de plazo, sin costo adicional.
+        </p>
+      </div>
+
+      <!-- Tarjetas Superiores de Métricas -->
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div class="metric-box p-5">
+          <p class="text-2xl sm:text-3xl font-black text-white">10 días</p>
+          <p class="text-sm font-medium text-zinc-300 mt-1">Plazo base (2 semanas de 5 días hábiles)</p>
+        </div>
+        <div class="metric-box p-5">
+          <p class="text-2xl sm:text-3xl font-black text-white">8 horas</p>
+          <p class="text-sm font-medium text-zinc-300 mt-1">Jornada diaria Lun-Vie desde Día 1 sin fechas reales</p>
+        </div>
+        <div class="metric-box p-5">
+          <p class="text-2xl sm:text-3xl font-black text-white">80 horas</p>
+          <p class="text-sm font-medium text-zinc-300 mt-1">Carga total de jornada (10 días × 8 horas/día)</p>
+        </div>
+        <div class="metric-box p-5">
+          <p class="text-2xl sm:text-3xl font-black text-cyanheading">+1 semana</p>
+          <p class="text-sm font-medium text-zinc-300 mt-1">Holgura (Días 11 a 15) sin costo adicional · plazo total 15 días</p>
+        </div>
+      </div>
+
+      <!-- Filtro de Partidas -->
+      <div class="surface-card p-4 flex flex-wrap items-center justify-between gap-3 no-print">
+        <span class="text-xs sm:text-sm font-semibold text-zinc-200">
+          Programación semanal (Lu, Ma, Mi, Ju, Vi · Días 1 a 10):
+        </span>
+        <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filtrar por partida">
+          <button type="button" data-part-filter="all" class="gantt-btn is-active" aria-pressed="true">Todas las Partidas</button>
+          <button type="button" data-part-filter="p1" class="gantt-btn" aria-pressed="false">Partida 1</button>
+          <button type="button" data-part-filter="p2" class="gantt-btn" aria-pressed="false">Partida 2</button>
+          <button type="button" data-part-filter="p3" class="gantt-btn" aria-pressed="false">Partida 3</button>
+          <button type="button" data-part-filter="p4" class="gantt-btn" aria-pressed="false">Partida 4</button>
+        </div>
+      </div>
+
+      <!-- Carta Gantt en formato de presupuesto (Lu a Vi · Días 1 a 10) -->
+      <div class="table-container">
+        <table class="gantt-table">
+          <thead>
+            <tr>
+              <th class="py-3 px-3.5 text-left" rowspan="2">Ítem</th>
+              <th class="py-3 px-3.5 text-left" rowspan="2">Actividad y Plazo</th>
+              <th class="py-3 px-3.5 text-center" rowspan="2">Inicio</th>
+              <th class="py-3 px-3.5 text-center" rowspan="2">Término</th>
+              <th class="py-3 px-3.5 text-right" rowspan="2">Días</th>
+              <th class="py-3 px-3.5 text-right" rowspan="2">Horas<br><span style="font-weight:400;color:var(--muted)">8 h/día</span></th>
+              <th class="py-2 gd" colspan="5" style="text-align:center">Semana 1 (5 días hábiles)</th>
+              <th class="py-2 gd wk" colspan="5" style="text-align:center">Semana 2 (5 días hábiles)</th>
+              <th class="py-2 gd wk hol" colspan="5" style="text-align:center">Semana 3 · Holgura (5 días hábiles)</th>
+            </tr>
+            <tr><th class="gd">Lu<br><span style="color:inherit">1</span></th><th class="gd">Ma<br><span style="color:inherit">2</span></th><th class="gd">Mi<br><span style="color:inherit">3</span></th><th class="gd">Ju<br><span style="color:inherit">4</span></th><th class="gd">Vi<br><span style="color:inherit">5</span></th><th class="gd wk">Lu<br><span style="color:inherit">6</span></th><th class="gd">Ma<br><span style="color:inherit">7</span></th><th class="gd">Mi<br><span style="color:inherit">8</span></th><th class="gd">Ju<br><span style="color:inherit">9</span></th><th class="gd">Vi<br><span style="color:inherit">10</span></th><th class="gd wk hol">Lu<br><span style="color:inherit">11</span></th><th class="gd hol">Ma<br><span style="color:inherit">12</span></th><th class="gd hol">Mi<br><span style="color:inherit">13</span></th><th class="gd hol">Ju<br><span style="color:inherit">14</span></th><th class="gd hol">Vi<br><span style="color:inherit">15</span></th></tr>
+          </thead>
+          <tbody id="gantt-body">
+            <tr class="partida-header-row" data-part="p1"><td class="py-2.5 px-3.5">1</td><td class="py-2.5 px-3.5" colspan="5">Partida 1 — Tratamiento Condensación (450 m²)</td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd wk"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"></td><td class="gd wk hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td></tr>
+            <tr data-part="p1"><td class="py-2 px-3.5 whitespace-nowrap">1.6–1.7</td><td class="py-2 px-3.5">Protección nylon pisos (450 m²) y lámparas</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 1</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 2</td><td class="py-2 px-3.5 text-right">2</td><td class="py-2 px-3.5 text-right">16</td><td class="gd"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd wk"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd wk hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td></tr>
+            <tr data-part="p1"><td class="py-2 px-3.5 whitespace-nowrap">1.1–1.3</td><td class="py-2 px-3.5">Limpieza, 1.350 tornillos + tapagotera y lavado</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 2</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 6</td><td class="py-2 px-3.5 text-right">5</td><td class="py-2 px-3.5 text-right">40</td><td class="gd"></td><td class="gd"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd wk"><i class="bar "></i></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd wk hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td></tr>
+            <tr data-part="p1"><td class="py-2 px-3.5 whitespace-nowrap">1.4–1.5</td><td class="py-2 px-3.5">Puente de adherencia y celulosa/pintura (450 m²)</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 6</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 9</td><td class="py-2 px-3.5 text-right">4</td><td class="py-2 px-3.5 text-right">32</td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd wk"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd"></td><td class="gd wk hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td></tr>
+            <tr class="partida-subtotal-row" data-part="p1"><td class="py-2.5 px-3.5" colspan="2">Plazo Partida 1 — Tratamiento Condensación</td><td class="py-2.5 px-3.5 text-center whitespace-nowrap">Día 1</td><td class="py-2.5 px-3.5 text-center whitespace-nowrap">Día 9</td><td class="py-2.5 px-3.5 text-right">9</td><td class="py-2.5 px-3.5 text-right">72</td><td class="gd" colspan="5"></td><td class="gd wk" colspan="5"></td><td class="gd wk hol" colspan="5"></td></tr>
+            <tr class="partida-header-row" data-part="p2"><td class="py-2.5 px-3.5">2</td><td class="py-2.5 px-3.5" colspan="5">Partida 2 — Cambio de Cubiertas (270 m²)</td><td class="gd"></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd wk"><i class="bar win"></i></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd wk hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td></tr>
+            <tr data-part="p2"><td class="py-2 px-3.5 whitespace-nowrap">2.5 &amp; 2.8</td><td class="py-2 px-3.5">Cambio costaneras (12 ml) y pintura estructura</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 2</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 4</td><td class="py-2 px-3.5 text-right">3</td><td class="py-2 px-3.5 text-right">24</td><td class="gd"></td><td class="gd"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd"></td><td class="gd wk"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd wk hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td></tr>
+            <tr data-part="p2"><td class="py-2 px-3.5 whitespace-nowrap">2.1–2.4 &amp; 2.7</td><td class="py-2 px-3.5">Cubierta Zincalum PV4 (270 m²) + 891 tornillos</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 3</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 5</td><td class="py-2 px-3.5 text-right">3</td><td class="py-2 px-3.5 text-right">24</td><td class="gd"></td><td class="gd"></td><td class="gd"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd wk"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd wk hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td></tr>
+            <tr data-part="p2"><td class="py-2 px-3.5 whitespace-nowrap">2.6 &amp; 2.9</td><td class="py-2 px-3.5">Hojalatería L 10x20 cm (33 ml + 270 ml)</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 5</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 6</td><td class="py-2 px-3.5 text-right">2</td><td class="py-2 px-3.5 text-right">16</td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"><i class="bar "></i></td><td class="gd wk"><i class="bar "></i></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd wk hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td></tr>
+            <tr class="partida-subtotal-row" data-part="p2"><td class="py-2.5 px-3.5" colspan="2">Plazo Partida 2 — Cambio de Cubiertas</td><td class="py-2.5 px-3.5 text-center whitespace-nowrap">Día 2</td><td class="py-2.5 px-3.5 text-center whitespace-nowrap">Día 6</td><td class="py-2.5 px-3.5 text-right">5</td><td class="py-2.5 px-3.5 text-right">40</td><td class="gd" colspan="5"></td><td class="gd wk" colspan="5"></td><td class="gd wk hol" colspan="5"></td></tr>
+            <tr class="partida-header-row" data-part="p3"><td class="py-2.5 px-3.5">3</td><td class="py-2.5 px-3.5" colspan="5">Partida 3 — Ampliación Baño / Baños</td><td class="gd"></td><td class="gd"></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd wk"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd wk hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td></tr>
+            <tr data-part="p3"><td class="py-2 px-3.5 whitespace-nowrap">3.1–3.2</td><td class="py-2 px-3.5">Demolición volcometal y tabiques Metalcom (24 m²)</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 3</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 5</td><td class="py-2 px-3.5 text-right">3</td><td class="py-2 px-3.5 text-right">24</td><td class="gd"></td><td class="gd"></td><td class="gd"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd wk"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd wk hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td></tr>
+            <tr data-part="p3"><td class="py-2 px-3.5 whitespace-nowrap">3.3–3.5.2</td><td class="py-2 px-3.5">Cielo falso (15 m²), pintura (39 m²) y eléctrico</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 6</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 10</td><td class="py-2 px-3.5 text-right">5</td><td class="py-2 px-3.5 text-right">40</td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd wk"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd"><i class="bar "></i></td><td class="gd wk hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td></tr>
+            <tr class="partida-subtotal-row" data-part="p3"><td class="py-2.5 px-3.5" colspan="2">Plazo Partida 3 — Ampliación Baño / Baños</td><td class="py-2.5 px-3.5 text-center whitespace-nowrap">Día 3</td><td class="py-2.5 px-3.5 text-center whitespace-nowrap">Día 10</td><td class="py-2.5 px-3.5 text-right">8</td><td class="py-2.5 px-3.5 text-right">64</td><td class="gd" colspan="5"></td><td class="gd wk" colspan="5"></td><td class="gd wk hol" colspan="5"></td></tr>
+            <tr class="partida-header-row" data-part="p4"><td class="py-2.5 px-3.5">4</td><td class="py-2.5 px-3.5" colspan="5">Partida 4 — Arriendo Equipos de Elevación (2 Alza Hombres)</td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd wk"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd"><i class="bar win"></i></td><td class="gd wk hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td></tr>
+            <tr data-part="p4"><td class="py-2 px-3.5 whitespace-nowrap">4.1–4.3</td><td class="py-2 px-3.5">Plataforma tijera, brazo articulado, flete y combustible</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 1</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 10</td><td class="py-2 px-3.5 text-right">10</td><td class="py-2 px-3.5 text-right">80</td><td class="gd"><i class="bar alt"></i></td><td class="gd"><i class="bar alt"></i></td><td class="gd"><i class="bar alt"></i></td><td class="gd"><i class="bar alt"></i></td><td class="gd"><i class="bar alt"></i></td><td class="gd wk"><i class="bar alt"></i></td><td class="gd"><i class="bar alt"></i></td><td class="gd"><i class="bar alt"></i></td><td class="gd"><i class="bar alt"></i></td><td class="gd"><i class="bar alt"></i></td><td class="gd wk hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td><td class="gd hol"></td></tr>
+            <tr class="partida-subtotal-row" data-part="p4"><td class="py-2.5 px-3.5" colspan="2">Plazo Partida 4 — Arriendo Equipos de Elevación (2 Alza Hombres)</td><td class="py-2.5 px-3.5 text-center whitespace-nowrap">Día 1</td><td class="py-2.5 px-3.5 text-center whitespace-nowrap">Día 10</td><td class="py-2.5 px-3.5 text-right">10</td><td class="py-2.5 px-3.5 text-right">80</td><td class="gd" colspan="5"></td><td class="gd wk" colspan="5"></td><td class="gd wk hol" colspan="5"></td></tr>
+            <tr class="partida-header-row"><td class="py-2.5 px-3.5">H</td><td class="py-2.5 px-3.5" colspan="5">Holgura — Reserva de plazo (sin costo adicional)</td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd wk"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd wk hol"><i class="bar win"></i></td><td class="gd hol"><i class="bar win"></i></td><td class="gd hol"><i class="bar win"></i></td><td class="gd hol"><i class="bar win"></i></td><td class="gd hol"><i class="bar win"></i></td></tr>
+            <tr><td class="py-2 px-3.5 whitespace-nowrap">H.1</td><td class="py-2 px-3.5">Holgura de 1 semana: contingencia climática, ajustes de terreno y recepción</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 11</td><td class="py-2 px-3.5 text-center whitespace-nowrap">Día 15</td><td class="py-2 px-3.5 text-right">5</td><td class="py-2 px-3.5 text-right">40</td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd wk"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd"></td><td class="gd wk hol"><i class="bar hold"></i></td><td class="gd hol"><i class="bar hold"></i></td><td class="gd hol"><i class="bar hold"></i></td><td class="gd hol"><i class="bar hold"></i></td><td class="gd hol"><i class="bar hold"></i></td></tr>
+            <tr class="partida-subtotal-row"><td class="py-2.5 px-3.5" colspan="2">Holgura — Costo adicional por la semana de reserva</td><td class="py-2.5 px-3.5 text-center whitespace-nowrap">Día 11</td><td class="py-2.5 px-3.5 text-center whitespace-nowrap">Día 15</td><td class="py-2.5 px-3.5 text-right">5</td><td class="py-2.5 px-3.5 text-right">$0</td><td class="gd" colspan="5"></td><td class="gd wk" colspan="5"></td><td class="gd wk hol" colspan="5"></td></tr>
+            <tr class="direct-total-row"><td class="py-3.5 px-3.5" colspan="2">PLAZO DE EJECUCIÓN (2 SEMANAS · LUNES A VIERNES · 8 H/DÍA)</td><td class="py-3.5 px-3.5 text-center whitespace-nowrap">Día 1</td><td class="py-3.5 px-3.5 text-center whitespace-nowrap">Día 10</td><td class="py-3.5 px-3.5 text-right">10</td><td class="py-3.5 px-3.5 text-right">80</td><td class="gd" colspan="5"></td><td class="gd wk" colspan="5"></td><td class="gd wk hol" colspan="5"></td></tr>
+            <tr class="final-total-row"><td class="py-4 px-3.5" colspan="2">PLAZO TOTAL CON HOLGURA DE 1 SEMANA (3 SEMANAS)</td><td class="py-4 px-3.5 text-center whitespace-nowrap">Día 1</td><td class="py-4 px-3.5 text-center whitespace-nowrap">Día 15</td><td class="py-4 px-3.5 text-right">15</td><td class="py-4 px-3.5 text-right">120</td><td class="gd" colspan="5"></td><td class="gd wk" colspan="5"></td><td class="gd wk hol" colspan="5"></td></tr>
+          </tbody>
+        </table>
+      </div>
+        </section>
+
+    <!-- =====================================================================
+         BLOQUE 6: SECCIÓN / H2 - CONCLUSIÓN TÉCNICA DE APLICACIÓN DE LAS SOLUCIONES PROPUESTAS
+         ===================================================================== -->
+    <section id="conclusion-tecnica" class="space-y-6">
+      <div class="border-b border-zinc-800 pb-3">
+        <span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Sección 5</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold mt-1">
+          5. Conclusión Técnica de Aplicación de las Soluciones Propuestas
+        </h2>
+      </div>
+
+      <div class="surface-card p-6 sm:p-8 space-y-5 text-sm sm:text-base leading-relaxed text-zinc-200">
+        <p>
+          La intervención integral del galpón de maquinarias en <strong class="font-bold text-white">Puerto Montt</strong> requiere abordar en orden técnico la estanqueidad exterior, el control higrotérmico de la cubierta y la habilitación interior de baños. Ejecutar la obra en <strong class="font-bold text-white">2 semanas de 5 días hábiles (lunes a viernes, 8 horas diarias, 80 horas totales desde el Día 1)</strong> permite coordinar los frentes en altura y en radier sin interferencias críticas. Adicionalmente, la carta Gantt reserva <strong class="font-bold text-white">1 semana de holgura (Días 11 a 15)</strong> sin costo adicional, por lo que el plazo total es de 3 semanas sin alterar el Costo Directo.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-black border border-zinc-800 rounded-xl p-4 space-y-1.5">
+            <h3 class="font-bold text-base">Secuencia Obligatoria de Impermeabilización</h3>
+            <p class="text-xs sm:text-sm text-zinc-300">
+              Primero se deben eliminar las filtraciones de agua lluvia mediante el recambio de cubierta Zincalum PV4 (270 m²), el reemplazo de costaneras (12 ml), la hojalatería L 10x20 cm y la sustitución de tornillos hexagonales corroídos por unidades con o-ring de poliuretano y sello tapagotera. Aplicar soluciones de condensación sobre fugas activas compromete su adherencia y durabilidad.
+            </p>
+          </div>
+
+          <div class="bg-black border border-zinc-800 rounded-xl p-4 space-y-1.5">
+            <h3 class="font-bold text-base">Preparación sobre PV-4 Electropintado</h3>
+            <p class="text-xs sm:text-sm text-zinc-300">
+              Para lograr una adherencia uniforme sobre la plancha PV-4 electropintada en los 450 m², es indispensable cumplir la limpieza previa, el lavado con detergente, el puente de adherencia/imprimante y el espesor recomendado de celulosa proyectada o recubrimiento anticondensación, manteniendo ventilación controlada para el secado en el clima de Puerto Montt.
+            </p>
+          </div>
+
+          <div class="bg-black border border-zinc-800 rounded-xl p-4 space-y-1.5">
+            <h3 class="font-bold text-base">Acondicionamiento de Baños y Canalización Eléctrica</h3>
+            <p class="text-xs sm:text-sm text-zinc-300">
+              En la Partida 3, la combinación de tabiquería Metalcom con volcanita y aislante, cielo falso y pintura con tratamiento de juntas (huincha join, lijado y pasta muro) mejora el desempeño frente a humedad interior. Se aconseja ejecutar las canalizaciones de los 4 centros LED y 4 centros de fuerza Marisio antes del cierre definitivo de terminaciones.
+            </p>
+          </div>
+
+          <div class="bg-black border border-zinc-800 rounded-xl p-4 space-y-1.5">
+            <h3 class="font-bold text-base">Control de Cantidades y Uso de Equipos en Altura</h3>
+            <p class="text-xs sm:text-sm text-zinc-300">
+              Antes del inicio en el Día 1, conviene verificar en terreno la correspondencia entre las fijaciones de las Partidas 1 y 2 y los tramos de hojalatería de los ítems 2.6 y 2.9 para evitar duplicidades, y optimizar el uso de los 2 alza hombres durante los 10 días hábiles priorizando trabajos en altura en las primeras jornadas.
+            </p>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm">
+          <span class="text-zinc-200">
+            Cierre Consolidado: <strong class="text-white">Costo Directo $22.403.425</strong> · <strong class="text-white">Neto $29.660.770</strong> · <strong class="text-white">Total c/IVA $35.296.316</strong>
+          </span>
+          <button
+            type="button"
+            onclick="window.print()"
+            class="no-print px-4 py-2.5 rounded-lg bg-cyanheading hover:brightness-110 text-black font-bold transition cursor-pointer"
+          >
+            Imprimir / Guardar PDF
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-zinc-800 py-6 text-center text-xs text-zinc-400">
+    <p>Presupuesto Galpón Maquinarias · Puerto Montt, Región de Los Lagos, Chile</p>
+  </footer>
+
+  <!-- Filtro interactivo de partidas en la Carta Gantt -->
+  <script>
+    (function () {
+      // Filtro de partidas en la Carta Gantt
+      const buttons = document.querySelectorAll('.gantt-btn');
+      const rows = document.querySelectorAll('#gantt-body tr[data-part]');
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const filter = btn.getAttribute('data-part-filter');
+          buttons.forEach((b) => {
+            const on = b === btn;
+            b.classList.toggle('is-active', on);
+            b.setAttribute('aria-pressed', on ? 'true' : 'false');
+          });
+          rows.forEach((r) => {
+            r.style.display = (filter === 'all' || r.getAttribute('data-part') === filter) ? '' : 'none';
+          });
+        });
+      });
+
+      // Resalta en el menú la sección visible
+      const links = document.querySelectorAll('header nav a');
+      const map = new Map();
+      links.forEach((a) => map.set(a.getAttribute('href').slice(1), a));
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              links.forEach((a) => a.classList.remove('nav-active'));
+              const a = map.get(e.target.id);
+              if (a) a.classList.add('nav-active');
+            }
+          });
+        }, { rootMargin: '-30% 0px -60% 0px' });
+        map.forEach((_, id) => { const el = document.getElementById(id); if (el) io.observe(el); });
+      }
+    })();
+  </script>
+</body>
+</html>
